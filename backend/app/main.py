@@ -115,6 +115,3 @@ async def ws_endpoint(ws: WebSocket):
             await ws.receive_text()
     except WebSocketDisconnect:
         hub.leave(ws)
-```
-
-```ini
