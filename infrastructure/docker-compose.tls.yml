@@ -18,6 +18,7 @@ services:
       MQTT_USERNAME: backend
       MQTT_PASSWORD: backend
       CORS_ORIGINS: "https://localhost"
+      START_MQTT: "1"
       JWT_SECRET: change-me
       JWT_EXPIRE_MINUTES: 60
       ADMIN_USER: admin
