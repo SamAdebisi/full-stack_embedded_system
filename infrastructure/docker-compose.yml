@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  broker:
+    image: eclipse-mosquitto:2
+    container_name: broker
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    ports: ["1883:1883"]
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: iot
+    ports: ["5432:5432"]
+  backend:
+    build: ../backend
+    environment:
+      DB_URL: postgresql+psycopg2://postgres:postgres@db:5432/iot
+      MQTT_HOST: broker
+      MQTT_PORT: 1883
+      START_MQTT: "1"
+      CORS_ORIGINS: "*"
+      JWT_SECRET: change-me
+      JWT_EXPIRE_MINUTES: 60
+      ADMIN_USER: admin
+      ADMIN_PASSWORD: adminpass
+    depends_on: [db, broker]
+    ports: ["8000:8000"]
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    volumes: ["../frontend:/app"]
+    command: sh -c "npm ci && npm run build"
+  web:
+    image: nginx:alpine
+    volumes:
+      - ../frontend/dist:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on: [frontend, backend]
+    ports: ["8080:80"]
