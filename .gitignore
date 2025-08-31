@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Node
+node_modules/
+frontend/dist/
+
+# PlatformIO
+.pio/
+
+# IDE
+.vscode/
+.idea/
+
+# Certs and secrets
+infrastructure/certs/*
+!infrastructure/certs/README.md
+infrastructure/passwords
+.env
