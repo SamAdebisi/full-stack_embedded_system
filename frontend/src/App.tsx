@@ -3,16 +3,19 @@ import { getDevices, getTelemetry, openWs } from './api'
 import DeviceCard from './components/DeviceCard'
 import TelemetryChart from './components/TelemetryChart'
 import Login from './components/Login'
+
 type Device = { device_id: string; online: boolean }
 type Telemetry = { id: number; device_id: string; ts: number; temp_c?: number; hum_pct?: number }
 type LiveIndex = Record<string, { temp?: number; hum?: number }>
 type WsMsg = { type: 'telemetry' | 'status'; data: any }
+
 export default function App() {
   const [devices, setDevices] = useState<Device[]>([])
   const [selected, setSelected] = useState<string>('env-esp32-01')
   const [series, setSeries] = useState<Telemetry[]>([])
   const [live, setLive] = useState<LiveIndex>({})
   const [authed, setAuthed] = useState<boolean>(() => !!localStorage.getItem('token'))
+  
   useEffect(() => { if (authed) getDevices().then(setDevices).catch(() => setAuthed(false)) }, [authed])
   useEffect(() => { if (authed && selected) getTelemetry(selected, 200).then(setSeries).catch(() => setAuthed(false)) }, [authed, selected])
   useEffect(() => {
