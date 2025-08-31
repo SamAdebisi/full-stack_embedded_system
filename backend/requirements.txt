@@ -1,6 +1,4 @@
 ruff==0.6.4
-
-###
 fastapi==0.114.1
 uvicorn[standard]==0.30.6
 pydantic==1.10.14
